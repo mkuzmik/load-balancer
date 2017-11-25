@@ -31,7 +31,7 @@ public class DataSourcePrototype {
     public boolean equals(DataSourcePrototype dataSourcePrototype){
         if(dataSourcePrototype == null) return false;
         if(dataSourcePrototype instanceof DataSourcePrototype)
-            return  (dataSourceParamiters.get("driverClassName").equals(dataSourcePrototype.getDataSourceParamiters().get("driverCLassName")) &&
+            return  (dataSourceParamiters.get("driverClassName").equals(dataSourcePrototype.getDataSourceParamiters().get("driverClassName")) &&
                     dataSourceParamiters.get("url").equals(dataSourcePrototype.getDataSourceParamiters().get("url")) &&
                     dataSourceParamiters.get("user").equals(dataSourcePrototype.getDataSourceParamiters().get("user")) &&
                     dataSourceParamiters.get("pass").equals(dataSourcePrototype.getDataSourceParamiters().get("pass")));

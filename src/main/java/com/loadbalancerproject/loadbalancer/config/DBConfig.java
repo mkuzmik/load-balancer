@@ -2,15 +2,34 @@ package com.loadbalancerproject.loadbalancer.config;
 
 
 import javax.sql.DataSource;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class DBConfig {
 
-   public List<DataSource> dataSourcesList = new LinkedList<DataSource>();
+   private Set<DataSource> dataSourcesList ;
 
-   public List<DataSource> getDataSourcesList(){
+   public DBConfig(DBConfigBuilder dbConfigBuilder) {
+      this.dataSourcesList = dbConfigBuilder.dataSourcesList;
+   }
+
+   public Set<DataSource> getDataSourcesList(){
       return dataSourcesList;
    }
+
+   public static class DBConfigBuilder{
+      public Set<DataSource> dataSourcesList = new HashSet<DataSource>();
+
+      public DBConfigBuilder dataSourceList(Collection<DataSource> dataSourceList){
+         this.dataSourcesList.addAll(dataSourceList);
+         return this;
+      }
+
+      public DBConfig build(){
+         return new DBConfig(this);
+      }
+
+
+   }
+
 
 }
