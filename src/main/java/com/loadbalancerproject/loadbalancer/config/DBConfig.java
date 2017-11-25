@@ -1,4 +1,4 @@
-package com.loadbalancerproject.loadbalancer;
+package com.loadbalancerproject.loadbalancer.config;
 
 
 import javax.sql.DataSource;

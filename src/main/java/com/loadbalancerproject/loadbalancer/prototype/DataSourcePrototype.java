@@ -1,5 +1,6 @@
-package com.loadbalancerproject.loadbalancer;
+package com.loadbalancerproject.loadbalancer.prototype;
 
+import com.loadbalancerproject.loadbalancer.exception.DataSourceParametersException;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;

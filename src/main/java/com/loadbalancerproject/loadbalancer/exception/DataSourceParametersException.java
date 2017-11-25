@@ -1,4 +1,4 @@
-package com.loadbalancerproject.loadbalancer;
+package com.loadbalancerproject.loadbalancer.exception;
 
 public class DataSourceParametersException extends Throwable {
     public DataSourceParametersException(Exception e){
