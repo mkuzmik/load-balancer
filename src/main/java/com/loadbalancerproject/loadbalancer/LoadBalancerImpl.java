@@ -3,19 +3,34 @@ package com.loadbalancerproject.loadbalancer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoadBalancerImpl implements LoadBalancer {
 
     Collection<EntityManagerFactory> entityManagerFactories = new ArrayList<>();
+    Collection<DataSource> dataSourceCollection = new ArrayList<>();
 
-    public LoadBalancerImpl() {
+
+    public LoadBalancerImpl(Collection<DataSource> dataSourceCollection) {
+        this.dataSourceCollection=dataSourceCollection;
+        setupEntityManagers();
     }
 
-    public LoadBalancerImpl(Collection<EntityManagerFactory> entityManagerFactories) {
-        this.entityManagerFactories = entityManagerFactories;
+    private void setupEntityManagers(){
+        for(DataSource dataSource : dataSourceCollection){
+            Map<String, Object> props = new HashMap<String, Object>();
+            props.put("javax.persistence.nonJtaDataSource", dataSource);
+            props.put("javax.persistence.transactionType", "RESOURCE_LOCAL");
+            EntityManagerFactory factory = Persistence.createEntityManagerFactory("manager1", props);
+            entityManagerFactories.add(factory);
+        }
     }
+
 
     public void addEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
         entityManagerFactories.add(entityManagerFactory);
