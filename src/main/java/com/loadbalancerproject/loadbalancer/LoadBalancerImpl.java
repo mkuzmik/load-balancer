@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class LoadBalancerImpl implements LoadBalancer {
+
+    private static Logger LOGGER = Logger.getLogger(LoadBalancerImpl.class.getName());
 
     Collection<EntityManagerFactory> entityManagerFactories = new ArrayList<>();
 
@@ -67,6 +70,11 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     private EntityManager getEntityManager() {
-        return strategy.getEntityManager(entityManagerFactories).createEntityManager();
+
+        EntityManagerFactory entityManagerFactory = strategy.chooseEntityManagerFactory(entityManagerFactories);
+
+        LOGGER.info("Retrieving data from " + entityManagerFactory.toString());
+
+        return entityManagerFactory.createEntityManager();
     }
 }
