@@ -1,5 +1,6 @@
 package com.loadbalancerproject.loadbalancer;
 
+import com.loadbalancerproject.loadbalancer.loadbalancing.LoadBalancingStrategy;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,8 @@ public interface LoadBalancer {
     void delete(Object obj, Class clazz);
 
     void update(Object obj, Class clazz);
+
+    void setLoadBalancingStrategy(LoadBalancingStrategy strategy);
 
     SelectQuery getSelectQuery();
 }

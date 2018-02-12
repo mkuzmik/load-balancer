@@ -1,6 +1,10 @@
 package com.loadbalancerproject.loadbalancer;
 
 import com.loadbalancerproject.loadbalancer.config.DBConfig;
+import com.loadbalancerproject.loadbalancer.loadbalancing.EqualDistributionStrategy;
+import com.loadbalancerproject.loadbalancer.loadbalancing.LoadBalancingStrategy;
+import com.loadbalancerproject.loadbalancer.loadbalancing.LoadCache;
+import com.loadbalancerproject.loadbalancer.loadbalancing.RandomStrategy;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.EntityManagerAdapter;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
 
@@ -13,12 +17,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class LoadBalancerImpl implements LoadBalancer {
 
+    private static Logger LOGGER = Logger.getLogger(LoadBalancerImpl.class.getName());
+
     Collection<EntityManagerFactory> entityManagerFactories = new ArrayList<>();
+
     Collection<DataSource> dataSourceCollection = new ArrayList<>();
 
+    LoadBalancingStrategy strategy = new EqualDistributionStrategy();
 
     public LoadBalancerImpl(DBConfig configuration) {
         this.dataSourceCollection=configuration.getDataSourcesList();
@@ -58,12 +67,25 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     @Override
-    public SelectQuery getSelectQuery() {
-        return new EntityManagerAdapter(getEntityManager());
+    public void setLoadBalancingStrategy(LoadBalancingStrategy strategy) {
+        this.strategy = strategy;
     }
 
-    private EntityManager getEntityManager() {
-        // should be improved (choosing proper emf, not "findFirst")
-        return entityManagerFactories.stream().findFirst().get().createEntityManager();
+    @Override
+    public SelectQuery getSelectQuery() {
+        return getEntityManagerAdapter();
+    }
+
+    private EntityManagerAdapter getEntityManagerAdapter() {
+
+        LoadCache loadCache = LoadCache.getInstance();
+
+        EntityManagerFactory entityManagerFactory = strategy.chooseEntityManagerFactory(entityManagerFactories);
+
+        loadCache.load(entityManagerFactory);
+
+        LOGGER.info("Retrieving data from " + entityManagerFactory.toString());
+
+        return new EntityManagerAdapter(entityManagerFactory.createEntityManager(), entityManagerFactory);
     }
 }
