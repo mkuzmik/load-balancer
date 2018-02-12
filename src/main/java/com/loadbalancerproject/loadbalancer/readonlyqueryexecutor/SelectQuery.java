@@ -8,4 +8,6 @@ public interface SelectQuery {
     CriteriaQuery getCriteriaQuery(Class clazz);
 
     TypedQuery getTypedQuery(CriteriaQuery criteriaQuery);
+
+    void close();
 }

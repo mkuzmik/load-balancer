@@ -1,7 +1,9 @@
 package com.loadbalancerproject.loadbalancer;
 
 import com.loadbalancerproject.loadbalancer.config.DBConfig;
+import com.loadbalancerproject.loadbalancer.loadbalancing.EqualDistributionStrategy;
 import com.loadbalancerproject.loadbalancer.loadbalancing.LoadBalancingStrategy;
+import com.loadbalancerproject.loadbalancer.loadbalancing.LoadCache;
 import com.loadbalancerproject.loadbalancer.loadbalancing.RandomStrategy;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.EntityManagerAdapter;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
@@ -25,7 +27,7 @@ public class LoadBalancerImpl implements LoadBalancer {
 
     Collection<DataSource> dataSourceCollection = new ArrayList<>();
 
-    LoadBalancingStrategy strategy = new RandomStrategy();
+    LoadBalancingStrategy strategy = new EqualDistributionStrategy();
 
     public LoadBalancerImpl(DBConfig configuration) {
         this.dataSourceCollection=configuration.getDataSourcesList();
@@ -66,15 +68,19 @@ public class LoadBalancerImpl implements LoadBalancer {
 
     @Override
     public SelectQuery getSelectQuery() {
-        return new EntityManagerAdapter(getEntityManager());
+        return getEntityManagerAdapter();
     }
 
-    private EntityManager getEntityManager() {
+    private EntityManagerAdapter getEntityManagerAdapter() {
+
+        LoadCache loadCache = LoadCache.getInstance();
 
         EntityManagerFactory entityManagerFactory = strategy.chooseEntityManagerFactory(entityManagerFactories);
 
+        loadCache.load(entityManagerFactory);
+
         LOGGER.info("Retrieving data from " + entityManagerFactory.toString());
 
-        return entityManagerFactory.createEntityManager();
+        return new EntityManagerAdapter(entityManagerFactory.createEntityManager(), entityManagerFactory);
     }
 }

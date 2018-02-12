@@ -5,5 +5,5 @@ import java.util.Collection;
 
 public interface LoadBalancingStrategy {
 
-    EntityManagerFactory getEntityManager(Collection<EntityManagerFactory> entityManagerFactories);
+    EntityManagerFactory chooseEntityManagerFactory(Collection<EntityManagerFactory> entityManagerFactories);
 }

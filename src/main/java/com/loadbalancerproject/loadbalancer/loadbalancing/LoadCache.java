@@ -4,8 +4,11 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class LoadCache {
+
+    private static Logger LOGGER = Logger.getLogger(LoadCache.class.getName());
 
     private static LoadCache instance;
 
@@ -27,6 +30,7 @@ public class LoadCache {
 
     public synchronized void load(EntityManagerFactory entityManagerFactory) {
         load.put(entityManagerFactory, getLoad(entityManagerFactory) + 1);
+        LOGGER.info(entityManagerFactory + " load increased to " + getLoad(entityManagerFactory));
     }
 
     public synchronized void release(EntityManagerFactory entityManagerFactory) {
@@ -34,6 +38,7 @@ public class LoadCache {
         counter = counter > 0 ? counter : 0;
 
         load.put(entityManagerFactory, counter);
+        LOGGER.info(entityManagerFactory + " load decreased to " + getLoad(entityManagerFactory));
     }
 
     public Integer getLoad(EntityManagerFactory entityManagerFactory) {

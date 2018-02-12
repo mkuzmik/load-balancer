@@ -7,7 +7,7 @@ import java.util.Random;
 public class RandomStrategy implements LoadBalancingStrategy {
 
     @Override
-    public EntityManagerFactory getEntityManager(Collection<EntityManagerFactory> entityManagerFactories) {
+    public EntityManagerFactory chooseEntityManagerFactory(Collection<EntityManagerFactory> entityManagerFactories) {
         Random random = new Random();
 
         EntityManagerFactory emf = null;
