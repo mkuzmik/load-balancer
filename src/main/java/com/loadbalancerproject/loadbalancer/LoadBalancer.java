@@ -1,5 +1,7 @@
 package com.loadbalancerproject.loadbalancer;
 
+import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -13,5 +15,5 @@ public interface LoadBalancer {
 
     void update(Object obj, Class clazz);
 
-    EntityManager getEntityManager();
+    SelectQuery getSelectQuery();
 }
