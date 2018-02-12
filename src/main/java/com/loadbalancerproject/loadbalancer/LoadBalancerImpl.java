@@ -56,7 +56,10 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     public void update(Object obj, Class clazz) {
-
+        entityManagerFactories.stream()
+                .map(EntityManagerFactory::createEntityManager)
+                .map(TransactionalEntityManager::new)
+                .forEach(transactionalEntityManager -> transactionalEntityManager.update(obj));
     }
 
     @Override

@@ -23,4 +23,11 @@ public class TransactionalEntityManager {
         entityManager.getTransaction().commit();
         entityManager.close();
     }
+
+    public void update(Object object) {
+        entityManager.getTransaction().begin();
+        entityManager.merge(object);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
 }
