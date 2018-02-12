@@ -36,11 +36,6 @@ public class LoadBalancerImpl implements LoadBalancer {
         }
     }
 
-
-    public void addEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-        entityManagerFactories.add(entityManagerFactory);
-    }
-
     public void save(Object obj, Class clazz) {
         entityManagerFactories.stream()
                 .map(EntityManagerFactory::createEntityManager)
