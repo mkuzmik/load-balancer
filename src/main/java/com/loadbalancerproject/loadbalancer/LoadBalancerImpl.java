@@ -1,6 +1,8 @@
 package com.loadbalancerproject.loadbalancer;
 
 import com.loadbalancerproject.loadbalancer.config.DBConfig;
+import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.EntityManagerAdapter;
+import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -58,7 +60,11 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     @Override
-    public EntityManager getEntityManager() {
+    public SelectQuery getSelectQuery() {
+        return new EntityManagerAdapter(getEntityManager());
+    }
+
+    private EntityManager getEntityManager() {
         // should be improved (choosing proper emf, not "findFirst")
         return entityManagerFactories.stream().findFirst().get().createEntityManager();
     }
