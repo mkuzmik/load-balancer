@@ -67,6 +67,11 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     @Override
+    public void setLoadBalancingStrategy(LoadBalancingStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    @Override
     public SelectQuery getSelectQuery() {
         return getEntityManagerAdapter();
     }
