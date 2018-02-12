@@ -1,6 +1,8 @@
 package com.loadbalancerproject.loadbalancer;
 
 import com.loadbalancerproject.loadbalancer.config.DBConfig;
+import com.loadbalancerproject.loadbalancer.loadbalancing.LoadBalancingStrategy;
+import com.loadbalancerproject.loadbalancer.loadbalancing.RandomStrategy;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.EntityManagerAdapter;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
 
@@ -17,8 +19,10 @@ import java.util.Map;
 public class LoadBalancerImpl implements LoadBalancer {
 
     Collection<EntityManagerFactory> entityManagerFactories = new ArrayList<>();
+
     Collection<DataSource> dataSourceCollection = new ArrayList<>();
 
+    LoadBalancingStrategy strategy = new RandomStrategy();
 
     public LoadBalancerImpl(DBConfig configuration) {
         this.dataSourceCollection=configuration.getDataSourcesList();
@@ -63,7 +67,6 @@ public class LoadBalancerImpl implements LoadBalancer {
     }
 
     private EntityManager getEntityManager() {
-        // should be improved (choosing proper emf, not "findFirst")
-        return entityManagerFactories.stream().findFirst().get().createEntityManager();
+        return strategy.getEntityManager(entityManagerFactories).createEntityManager();
     }
 }
