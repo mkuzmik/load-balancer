@@ -40,7 +40,7 @@ mvn clean install
 **4**.To achieve successful LoadBalancer configuration you need to use LoadBalancerDataSource, DatabaseConfiguration,  LoadBalancingStrategy classes and create LoadBalancer class bean.  </br> </br>
 **Class description:** </br>
 **LoadBalancerDataSource** class is used to specify database connection details. You must pass driverClassName, url, username, password. By default driverClassName="org.postgresql.Driver", user= "postgres", pass = "", so if you have database with these parameters you need to give just url. </br>
-**DatabaseConfiguration** class is used to specify whole database settings. That includes collection of LoadBalancedDataSources and LoadBalancingStrategy. It has to be passed as an argument in LoadBalancer constructor  </br>
+**DatabaseConfiguration** class is used to specify whole database settings. That includes collection of LoadBalancerDataSources and LoadBalancingStrategy. It has to be passed as an argument in LoadBalancer constructor  </br>
 **LoadBalancingStrategy** class is used to specify concrete load balancing strategy. There are two available strategies: EqualDistributionStrategy and RandomStrategy.</br>
 
 **Configuration example:**
