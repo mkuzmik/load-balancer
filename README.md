@@ -17,7 +17,7 @@ mvn clean install
 
 ## How to configure Load Balancer using Spring Framework
 
-**1**. Create persistence.xml file in your \resources\META-INF directory. Next you have to copy below configuration into this file. Remember to specify persistence-unit name as "manager1", it is required by our library. 
+**1**. Create persistence.xml file in your \resources\META-INF directory. Next you have to copy below configuration into this file. 
 
 ```
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
