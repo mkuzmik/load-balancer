@@ -1,16 +1,12 @@
 package com.loadbalancerproject.loadbalancer;
 
-import com.loadbalancerproject.loadbalancer.config.DBConfig;
-import com.loadbalancerproject.loadbalancer.loadbalancing.EqualDistributionStrategy;
+import com.loadbalancerproject.loadbalancer.config.DatabaseConfiguration;
 import com.loadbalancerproject.loadbalancer.loadbalancing.LoadBalancingStrategy;
 import com.loadbalancerproject.loadbalancer.loadbalancing.LoadCache;
-import com.loadbalancerproject.loadbalancer.loadbalancing.RandomStrategy;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.EntityManagerAdapter;
 import com.loadbalancerproject.loadbalancer.readonlyqueryexecutor.SelectQuery;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -25,12 +21,13 @@ public class LoadBalancerImpl implements LoadBalancer {
 
     Collection<EntityManagerFactory> entityManagerFactories = new ArrayList<>();
 
-    Collection<DataSource> dataSourceCollection = new ArrayList<>();
+    Collection<DataSource> dataSourceCollection ;
 
-    LoadBalancingStrategy strategy = new EqualDistributionStrategy();
+    LoadBalancingStrategy strategy ;
 
-    public LoadBalancerImpl(DBConfig configuration) {
-        this.dataSourceCollection=configuration.getDataSourcesList();
+    public LoadBalancerImpl(DatabaseConfiguration configuration) {
+        this.dataSourceCollection=configuration.getDataSources();
+        this.strategy = configuration.getStrategy();
         setupEntityManagers();
     }
 
@@ -39,7 +36,6 @@ public class LoadBalancerImpl implements LoadBalancer {
             Map<String, Object> props = new HashMap<String, Object>();
             props.put("javax.persistence.nonJtaDataSource", dataSource);
             props.put("javax.persistence.transactionType", "RESOURCE_LOCAL");
-            //TODO dynamic persistanceUnitName, for now it is hardcode
             EntityManagerFactory factory = Persistence.createEntityManagerFactory("manager1", props);
             entityManagerFactories.add(factory);
         }
